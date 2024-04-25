@@ -27,16 +27,19 @@ public class FeedController {
 	@Autowired
 	FeedRepository feedRepository;
 
-	
-
 	@DeleteMapping("feeds/id/{id}")
-	public void deleteId(@PathVariable("id") Long id) {
+	public void deleteId(@PathVariable("id") Long id, Feed feed) {
 
-		Optional<Feed> feed = feedService.getFeedById(id);
-		if (feed.isPresent()) {
-			service.getMediaStoreService().deleteFile(feed.map(Feed::getImg).get());
+		Optional<Feed> optionalFeed = feedService.getFeedById(id);
+		if (optionalFeed.isPresent()) {
+			feed = optionalFeed.get();
+			if (feed.getImg().isEmpty()) {
+				feedService.deleteFeedId(id);
+			} else {
+				service.getMediaStoreService().deleteFile(optionalFeed.map(Feed::getImg).get());
+				feedService.deleteFeedId(id);
+			}
 
-			feedService.deleteFeedId(id);
 		}
 
 	}
@@ -68,6 +71,5 @@ public class FeedController {
 //
 //		}
 //	}
-
 
 }

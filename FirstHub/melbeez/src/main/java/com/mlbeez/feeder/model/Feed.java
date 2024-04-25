@@ -15,15 +15,15 @@ public class Feed {
 
 	private Long id;
 
-	private String title;
+//	private String title;
 
 	@JsonInclude(JsonInclude.Include.ALWAYS)
 	private String link;
 
 	private String description;
 	private String author;
-	private String category;
-	private String tags;
+//	private String category;
+//	private String tags;
 	private String img;
 
 	@CreationTimestamp
@@ -45,13 +45,13 @@ public class Feed {
 		this.id = id;
 	}
 
-	public String getTitle() {
-		return title;
-	}
+//	public String getTitle() {
+//		return title;
+//	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+//	public void setTitle(String title) {
+//		this.title = title;
+//	}
 
 	public String getLink() {
 		return link;
@@ -77,21 +77,21 @@ public class Feed {
 		this.author = author;
 	}
 
-	public String getCategory() {
-		return category;
-	}
+//	public String getCategory() {
+//		return category;
+//	}
+//
+//	public void setCategory(String category) {
+//		this.category = category;
+//	}
 
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getTags() {
-		return tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
+//	public String getTags() {
+//		return tags;
+//	}
+//
+//	public void setTags(String tags) {
+//		this.tags = tags;
+//	}
 
 	public String getImg() {
 		return img;
