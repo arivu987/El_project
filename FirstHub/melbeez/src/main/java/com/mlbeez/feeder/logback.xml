@@ -46,7 +46,7 @@
             </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
     </appender>
-    <!-- Send logs to both console and file audit -->
+   
     <logger name="com.mlbeez.feeder" level="debug"
             additivity="false">
         <appender-ref ref="FILE-AUDIT" />
