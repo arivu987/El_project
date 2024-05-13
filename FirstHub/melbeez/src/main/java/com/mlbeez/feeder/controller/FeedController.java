@@ -52,9 +52,9 @@ public class FeedController {
                 service.getMediaStoreService().deleteFile(feed.getImg());
             }
             feedService.deleteFeedId(id);
-            return ResponseEntity.ok().build(); // Return 200 OK if deletion is successful
+            return ResponseEntity.ok().build(); 
         } else {
-            return ResponseEntity.notFound().build(); // Return 404 Not Found if feed with given ID doesn't exist
+            return ResponseEntity.notFound().build(); 
         }
     }
 
@@ -70,6 +70,7 @@ public class FeedController {
     }
 
 
+//  To use all images get from s3
 //	@GetMapping("image/all")
 //	public List<String> getAllImageFileKeys() {
 //
@@ -77,17 +78,7 @@ public class FeedController {
 //		return Services.getAllImageFileKeys();
 //	}
 
-//	@GetMapping("/feeds/id/{id}")
-//	public ResponseEntity<Feed> getIdFeeds(@PathVariable("id") Long id) {
-//		Optional<Feed> feedId = feedService.getIdFeeds(id);
-//		if (feedId.isPresent()) {
-//			return new ResponseEntity<>(feedId.get(), HttpStatus.OK);
-//		} else {
-//
-//			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//
-//		}
-//	}
+
 
 
 }
