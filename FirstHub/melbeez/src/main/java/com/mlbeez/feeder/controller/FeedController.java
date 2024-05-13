@@ -5,14 +5,19 @@ import com.mlbeez.feeder.repository.FeedRepository;
 import com.mlbeez.feeder.service.FeedService;
 import com.mlbeez.feeder.service.MediaStoreService;
 import com.mlbeez.feeder.service.awss3.S3Service;
+import com.mlbeez.feeder.service.exception.DataNotFoundException;
+import com.mlbeez.feeder.service.exception.RestTemplateResponseErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+
 import java.util.List;
 import java.util.Optional;
 
 @RestController
+
 public class FeedController {
 
 	@Autowired
@@ -27,19 +32,34 @@ public class FeedController {
 	@Autowired
 	FeedRepository feedRepository;
 
-	
+	@Autowired
+	RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
-	@DeleteMapping("feeds/id/{id}")
-	public void deleteId(@PathVariable("id") Long id) {
-
-		Optional<Feed> feed = feedService.getFeedById(id);
-		if (feed.isPresent()) {
-			service.getMediaStoreService().deleteFile(feed.map(Feed::getImg).get());
-
-			feedService.deleteFeedId(id);
-		}
-
+	public FeedController(FeedService feedService) {
+		this.feedService = feedService;
 	}
+
+
+	@DeleteMapping("/feeds/id/{id}")
+	public ResponseEntity<?> deleteFeedById(@PathVariable("id") Long id) {
+
+
+		Optional<Feed> optionalFeed = feedService.getFeedById(id);
+
+		if (optionalFeed.isPresent()) {
+			Feed feed = optionalFeed.get();
+			if (!feed.getImg().isEmpty()) {
+				service.getMediaStoreService().deleteFile(feed.getImg());
+			}
+			feedService.deleteFeedId(id);
+			return ResponseEntity.ok().build(); // Return 200 OK if deletion is successful
+		} else {
+			return ResponseEntity.notFound().build(); // Return 404 Not Found if feed with given ID doesn't exist
+		}
+	}
+
+
+
 
 	@GetMapping("/id/{id}")
 	public String handleGet(@PathVariable String id) {
@@ -47,15 +67,18 @@ public class FeedController {
 		return service.getMediaStoreService().getFileLocation(id + ".jpeg");
 	}
 
-	@GetMapping("image/all")
-	public List<String> getAllImageFileKeys() {
-		return Services.getAllImageFileKeys();
-	}
-
 	@GetMapping("/feeds")
 	public List<Feed> getAllFeeds() {
 		return feedService.getAllFeeds();
 	}
+
+
+//	@GetMapping("image/all")
+//	public List<String> getAllImageFileKeys() {
+//
+//
+//		return Services.getAllImageFileKeys();
+//	}
 
 //	@GetMapping("/feeds/id/{id}")
 //	public ResponseEntity<Feed> getIdFeeds(@PathVariable("id") Long id) {

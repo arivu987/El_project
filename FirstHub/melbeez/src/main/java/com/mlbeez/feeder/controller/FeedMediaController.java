@@ -36,7 +36,7 @@ public class FeedMediaController {
 	@PostMapping("/upload")
 	public ResponseEntity<String> handleUpload(Model model, @ModelAttribute Feed feed,
 			@RequestParam("file") MultipartFile multipart) {
-		// abc.jpeg xyz.png adb.gif 
+
 		String fileName = multipart.getOriginalFilename();
 //		multipart.getOriginalFilename();
 		
@@ -48,40 +48,40 @@ public class FeedMediaController {
 		String extension = (partStrings.length>1)? partStrings[1]:"";
 		 
 		fileName= UUID.randomUUID().toString()+"."+extension;
-		//"absgdf876587547yjg.jpeg"
+
 		
 		
 		String message = "";
 
 		try {
-		
-			String s = service.getMediaStoreService().uploadFile(fileName, multipart.getInputStream());
-			
-			feed.setLink(s);
-			feed.setImg(fileName);
-			feed.getCreatedAt();
-			
-			feedRepository.save(feed);
 
-			message = "Your file has been uploaded successfully! here " + s;
+			String s = service.getMediaStoreService().uploadFile(fileName, multipart.getInputStream());
+			if (multipart.isEmpty()) {
+				feed.setLink("");
+				feed.getCreatedAt();
+				feed.setImg("");
+				feedRepository.save(feed);
+
+				message = "Your file has been uploaded successfully! here ";
+			} else {
+				feed.setLink(s);
+				feed.setImg(fileName);
+				feed.getCreatedAt();
+
+				feedRepository.save(feed);
+
+				message = "Your file has been uploaded successfully! here " + s;
+
+			}
 
 		} catch (Exception ex) {
 			message = "Error uploading file: " + ex.getMessage();
 		}
 
+
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 	}
 
 	
-	//To store the Database without Image Link
-	@PostMapping("/uploadDetails")
-	public ResponseEntity<String> UploadDetails(@ModelAttribute Feed feed) {
-		String message = "";
-		feed.setLink("");
-		feedRepository.save(feed);
-		message = "Your file has been uploaded successfully! here ";
-		return ResponseEntity.status(HttpStatus.OK).body(message);
-
-	}
 
 }

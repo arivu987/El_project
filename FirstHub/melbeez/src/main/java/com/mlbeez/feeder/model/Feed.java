@@ -5,10 +5,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
 
 @Entity
 @Table(name = "feeds")
-public class Feed {
+public class Feed extends RepresentationModel<Feed> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO) // Use GenerationType.IDENTITY for auto-generated IDs
 	@Column(columnDefinition = "bigint")
@@ -21,12 +22,13 @@ public class Feed {
 	private String link;
 
 	private String description;
-	private String author;
-	private String category;
-	private String tags;
+//	private String author;
+//	private String category;
+//	private String tags;
 	private String img;
 
 	@CreationTimestamp
+//	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
 	public LocalDateTime getCreatedAt() {
@@ -69,29 +71,29 @@ public class Feed {
 		this.description = description;
 	}
 
-	public String getAuthor() {
-		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-
-	public String getCategory() {
-		return category;
-	}
-
-	public void setCategory(String category) {
-		this.category = category;
-	}
-
-	public String getTags() {
-		return tags;
-	}
-
-	public void setTags(String tags) {
-		this.tags = tags;
-	}
+//	public String getAuthor() {
+//		return author;
+//	}
+//
+//	public void setAuthor(String author) {
+//		this.author = author;
+//	}
+//
+//	public String getCategory() {
+//		return category;
+//	}
+//
+//	public void setCategory(String category) {
+//		this.category = category;
+//	}
+//
+//	public String getTags() {
+//		return tags;
+//	}
+//
+//	public void setTags(String tags) {
+//		this.tags = tags;
+//	}
 
 	public String getImg() {
 		return img;
