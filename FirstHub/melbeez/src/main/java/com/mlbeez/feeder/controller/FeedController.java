@@ -5,7 +5,7 @@ import com.mlbeez.feeder.repository.FeedRepository;
 import com.mlbeez.feeder.service.FeedService;
 import com.mlbeez.feeder.service.MediaStoreService;
 import com.mlbeez.feeder.service.awss3.S3Service;
-import com.mlbeez.feeder.service.exception.DataNotFoundException;
+
 import com.mlbeez.feeder.service.exception.RestTemplateResponseErrorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,57 +20,54 @@ import java.util.Optional;
 
 public class FeedController {
 
-	@Autowired
-	S3Service Services;
+    @Autowired
+    S3Service Services;
 
-	@Autowired
-	MediaStoreService service;
+    @Autowired
+    MediaStoreService service;
 
-	@Autowired
-	FeedService feedService;
+    @Autowired
+    FeedService feedService;
 
-	@Autowired
-	FeedRepository feedRepository;
+    @Autowired
+    FeedRepository feedRepository;
 
-	@Autowired
-	RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
+    @Autowired
+    RestTemplateResponseErrorHandler restTemplateResponseErrorHandler;
 
-	public FeedController(FeedService feedService) {
-		this.feedService = feedService;
-	}
-
-
-	@DeleteMapping("/feeds/id/{id}")
-	public ResponseEntity<?> deleteFeedById(@PathVariable("id") Long id) {
+    public FeedController(FeedService feedService) {
+        this.feedService = feedService;
+    }
 
 
-		Optional<Feed> optionalFeed = feedService.getFeedById(id);
-
-		if (optionalFeed.isPresent()) {
-			Feed feed = optionalFeed.get();
-			if (!feed.getImg().isEmpty()) {
-				service.getMediaStoreService().deleteFile(feed.getImg());
-			}
-			feedService.deleteFeedId(id);
-			return ResponseEntity.ok().build(); // Return 200 OK if deletion is successful
-		} else {
-			return ResponseEntity.notFound().build(); // Return 404 Not Found if feed with given ID doesn't exist
-		}
-	}
+    @DeleteMapping("/feeds/id/{id}")
+    public ResponseEntity<?> deleteFeedById(@PathVariable("id") Long id) {
 
 
+        Optional<Feed> optionalFeed = feedService.getFeedById(id);
 
+        if (optionalFeed.isPresent()) {
+            Feed feed = optionalFeed.get();
+            if (!feed.getImg().isEmpty()) {
+                service.getMediaStoreService().deleteFile(feed.getImg());
+            }
+            feedService.deleteFeedId(id);
+            return ResponseEntity.ok().build(); // Return 200 OK if deletion is successful
+        } else {
+            return ResponseEntity.notFound().build(); // Return 404 Not Found if feed with given ID doesn't exist
+        }
+    }
 
-	@GetMapping("/id/{id}")
-	public String handleGet(@PathVariable String id) {
+    @GetMapping("/feeds")
+    public List<Feed> getAllFeeds() {
+        return feedService.getAllFeeds();
+    }
 
-		return service.getMediaStoreService().getFileLocation(id + ".jpeg");
-	}
+    @GetMapping("/id/{id}")
+    public String handleGet(@PathVariable String id) {
 
-	@GetMapping("/feeds")
-	public List<Feed> getAllFeeds() {
-		return feedService.getAllFeeds();
-	}
+        return service.getMediaStoreService().getFileLocation(id + ".jpeg");
+    }
 
 
 //	@GetMapping("image/all")

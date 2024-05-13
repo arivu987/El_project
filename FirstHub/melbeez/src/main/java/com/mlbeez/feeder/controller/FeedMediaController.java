@@ -19,69 +19,56 @@ import org.springframework.ui.Model;
 @Controller
 public class FeedMediaController {
 
-	@Autowired
-	MediaStoreService service;
+    @Autowired
+    MediaStoreService service;
 
-	@Autowired
-	FeedService feedService;
+    @Autowired
+    FeedService feedService;
 
-	@Autowired
-	private FeedRepository feedRepository;
+    @Autowired
+    private FeedRepository feedRepository;
 
-	@GetMapping("")
-	public String viewHomePage() {
-		return "upload";
-	}
+    @GetMapping("")
+    public String viewHomePage() {
+        return "upload";
+    }
 
-	@PostMapping("/upload")
-	public ResponseEntity<String> handleUpload(Model model, @ModelAttribute Feed feed,
-			@RequestParam("file") MultipartFile multipart) {
+    @PostMapping("/upload")
+    public ResponseEntity<String> handleUpload(Model model, @ModelAttribute Feed feed, @RequestParam("file") MultipartFile multipart) {
+        String fileName = multipart.getOriginalFilename();
+        String[] partStrings = fileName.split("\\.");
+        String file = partStrings[0];
+        String extension = (partStrings.length > 1) ? partStrings[1] : "";
+        fileName = UUID.randomUUID().toString() + "." + extension;
+        String message = "";
 
-		String fileName = multipart.getOriginalFilename();
-//		multipart.getOriginalFilename();
-		
-		
-		String[] partStrings=fileName.split("\\.");
-		
-		
-		String file = partStrings[0];
-		String extension = (partStrings.length>1)? partStrings[1]:"";
-		 
-		fileName= UUID.randomUUID().toString()+"."+extension;
+        try {
 
-		
-		
-		String message = "";
+            String s = service.getMediaStoreService().uploadFile(fileName, multipart.getInputStream());
+            if (multipart.isEmpty()) {
+                feed.setLink("");
+                feed.getCreatedAt();
+                feed.setImg("");
+                feedRepository.save(feed);
 
-		try {
+                message = "Your file has been uploaded successfully! here ";
+            } else {
+                feed.setLink(s);
+                feed.setImg(fileName);
+                feed.getCreatedAt();
 
-			String s = service.getMediaStoreService().uploadFile(fileName, multipart.getInputStream());
-			if (multipart.isEmpty()) {
-				feed.setLink("");
-				feed.getCreatedAt();
-				feed.setImg("");
-				feedRepository.save(feed);
+                feedRepository.save(feed);
 
-				message = "Your file has been uploaded successfully! here ";
-			} else {
-				feed.setLink(s);
-				feed.setImg(fileName);
-				feed.getCreatedAt();
+                message = "Your file has been uploaded successfully! here " + s;
 
-				feedRepository.save(feed);
+            }
 
-				message = "Your file has been uploaded successfully! here " + s;
-
-			}
-
-		} catch (Exception ex) {
-			message = "Error uploading file: " + ex.getMessage();
-		}
+        } catch (Exception ex) {
+            message = "Error uploading file: " + ex.getMessage();
+        }
 
 
-		return ResponseEntity.status(HttpStatus.OK).body(message);
-	}
-
-	
+        return ResponseEntity.status(HttpStatus.OK).body(message);
+    }
 
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.mlbeez.feeder.controller.FeedController;
+import com.mlbeez.feeder.model.Feed;
 import com.mlbeez.feeder.service.exception.DataNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
-import com.mlbeez.feeder.model.Feed;
 import com.mlbeez.feeder.repository.FeedRepository;
 import org.springframework.util.CollectionUtils;
 
